@@ -178,5 +178,5 @@ function appendPosition(position) {
 
 // --- Utils
 function convertKmToM(val) {
-    return (val / 1000);
+    return (val * 1000);
 }
