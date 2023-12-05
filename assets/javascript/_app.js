@@ -92,8 +92,8 @@ function updateDistanceTotale() {
     let distanceToDisplay = distance;
     let unit = "km";
 
-    if(val < 1) {
-        distanceToDisplay = convertKmToM(val);
+    if(distance < 1) {
+        distanceToDisplay = convertKmToM(distance);
         unit = "m";
     }
 
