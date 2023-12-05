@@ -19,10 +19,6 @@ let distance = 0;
 
 // --- Buttons triggers
 
-currentLatitude.innerHTML = "Aucune latitude enregistrée";
-currentLongitude.innerHTML = "Aucune longitude enregistrée";
-
-
 // Get current position
 getCurrentPositionButton.addEventListener("click", function (e) {
     navigator.geolocation.getCurrentPosition(position => {
@@ -51,7 +47,7 @@ startWatchPositionButton.addEventListener("click", function (e) {
         const { latitude, longitude } = position.coords;
 
         appendPosition(position);
-        
+
         updateCurrentPosition(latitude, longitude);
 
         addHistoryEntry(latitude, longitude);
@@ -72,16 +68,19 @@ stopWatchPositionButton.addEventListener("click", function () {
     navigator.geolocation.clearWatch(watchId);
 
     updateCurrentPosition("stop", "stop");
-    addHistoryEntry("stop", "stop");
+    addHistoryEntry("stop", "stop", "stop");
 });
 
 // Reset datas positions
-resetPositionButton.addEventListener("click", function() {
+resetPositionButton.addEventListener("click", function () {
     // Clear watch position
     navigator.geolocation.clearWatch(watchId);
 
+    // Reset buttons
+    resetButtons();
+
     // Update current position
-    updateCurrentPosition("Aucune latitude enregistrée", "Aucune longitude enregistrée")
+    updateCurrentPosition("", "")
 
     // Reset history table
     resetHistoryTable();
@@ -89,7 +88,16 @@ resetPositionButton.addEventListener("click", function() {
 
 // --- UI datas
 function updateDistanceTotale(val) {
-    distanceTotaleValue.innerHTML = val;
+
+    let distanceToDisplay = val;
+    let unit = "km";
+
+    if(val < 1) {
+        distanceToDisplay = convertKmToM(val);
+        unit = "m";
+    }
+
+    distanceTotaleValue.innerHTML = distanceToDisplay + unit;
 }
 
 function updateCurrentPosition(latitude, longitude) {
@@ -99,10 +107,16 @@ function updateCurrentPosition(latitude, longitude) {
 
 function addHistoryEntry(latitude, longitude) {
 
-    let newRow = historyPositionTBody.insertRow();
+    let newRow = historyPositionTBody.insertRow(0);
 
+    let newCellTimestamp = newRow.insertCell();
     let newCellLatitude = newRow.insertCell();
     let newCellLongitude = newRow.insertCell();
+
+    let newDate = new Date();
+    let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + " - " + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s" + newDate.getMilliseconds() + "ms";
+    let newTextTimestamp = document.createTextNode(displayDate);
+    newCellTimestamp.appendChild(newTextTimestamp);
 
     let newTextLatitude = document.createTextNode(latitude);
     newCellLatitude.appendChild(newTextLatitude);
@@ -116,6 +130,14 @@ function resetHistoryTable() {
 
     // historyPositionTBody.parentNode.replaceChild(new_tbody, historyPositionTBody);
     historyPositionTBody.innerHTML = null;
+}
+
+function resetButtons() {
+    // Hide start button
+    startWatchPositionButton.hidden = false;
+
+    // Display stop button
+    stopWatchPositionButton.hidden = true;
 }
 
 // --- GPS datas
@@ -144,7 +166,7 @@ function appendPosition(position) {
     }
 
     // Add new coordinates to array
-    coords.push(position.coords);
+    coords.unshift(position.coords);
 
     updateDistanceTotale(distance);
 
@@ -152,4 +174,9 @@ function appendPosition(position) {
     // if(watchCallback) {
     //     watchCallback(position, distance, watchID);
     // }
+}
+
+// --- Utils
+function convertKmToM(val) {
+    return (val / 1000);
 }
