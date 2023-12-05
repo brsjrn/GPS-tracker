@@ -2,7 +2,7 @@
 
 Web app to POC GPS tracking from browser on a smartphone.
 
-[Demo](https://brsjrn-gps-tracking.netlify.app/)
+<a href="https://brsjrn-gps-tracking.netlify.app/" target="_blank">Demo</a>
 
 ## Versions
 
