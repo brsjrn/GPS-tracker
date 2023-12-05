@@ -87,9 +87,9 @@ resetPositionButton.addEventListener("click", function () {
 })
 
 // --- UI datas
-function updateDistanceTotale(val) {
+function updateDistanceTotale() {
 
-    let distanceToDisplay = val;
+    let distanceToDisplay = distance;
     let unit = "km";
 
     if(val < 1) {
@@ -140,6 +140,11 @@ function resetButtons() {
     stopWatchPositionButton.hidden = true;
 }
 
+function resetDistance() {
+    distance = 0;
+    updateDistanceTotale();
+}
+
 // --- GPS datas
 // Calcule la distance entre 2 positions
 function calculateDistance(fromPos, toPos) {
@@ -168,7 +173,7 @@ function appendPosition(position) {
     // Add new coordinates to array
     coords.push(position.coords);
 
-    updateDistanceTotale(distance);
+    updateDistanceTotale();
 
     // Call custom callback
     // if(watchCallback) {

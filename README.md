@@ -4,10 +4,11 @@ Web app to POC GPS tracking from browser on a smartphone.
 
 ## Versions
 
-### v0.4
+### Backlog
 - [ ] Redesign avec Bootstrap
 - [ ] Refacto POO JS
 - [ ] Carte (https://leafletjs.com/)
+- [ ] Utilisation des Signaux javascript pour update de l'interface
 
 ### v0.3 (current)
 - [x] Responsive smartphone
