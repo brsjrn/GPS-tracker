@@ -97,7 +97,7 @@ function updateDistanceTotale(val) {
         unit = "m";
     }
 
-    distanceTotaleValue.innerHTML = distanceToDisplay + unit;
+    distanceTotaleValue.innerHTML = (Math.round((distanceToDisplay + Number.EPSILON) * 100) / 100) + unit;
 }
 
 function updateCurrentPosition(latitude, longitude) {
@@ -166,7 +166,7 @@ function appendPosition(position) {
     }
 
     // Add new coordinates to array
-    coords.unshift(position.coords);
+    coords.push(position.coords);
 
     updateDistanceTotale(distance);
 
