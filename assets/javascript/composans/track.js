@@ -29,7 +29,8 @@ export default class Track {
 
     constructor(title) {
         let currentDate = new Date();
-        let titlePrefix = "[" + currentDate.getFullYear() + "/" + currentDate.getMonth() + "/" + currentDate.getDate() + "] ";
+        // let titlePrefix = '<span class="badge bg-secondary">'+ currentDate.getFullYear() + '/' + currentDate.getMonth() + '/' + currentDate.getDate() + '</span> ';
+        let titlePrefix = '['+ currentDate.getFullYear() + '/' + currentDate.getMonth() + '/' + currentDate.getDate() + '] ';
 
         if (title == "") {
             this.#title = titlePrefix + "Sans nom"
@@ -116,7 +117,7 @@ export default class Track {
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Timestamp</th>
+                                        <!-- <th>Timestamp</th> -->
                                         <th>Latitude</th>
                                         <th>Longitude</th>
                                     </tr>
@@ -185,7 +186,7 @@ export default class Track {
             // End watch
             this.end()
 
-            document.querySelector("#voyage").hidden = true
+            document.querySelector("#track").hidden = true
         })
 
         // Reset Track
@@ -283,17 +284,17 @@ export default class Track {
 
         let newRow = this.#tBodyPositionHistory.insertRow(0);
 
-        let newCellTimestamp = newRow.insertCell()
+        // let newCellTimestamp = newRow.insertCell()
         let newCellLatitude = newRow.insertCell()
         let newCellLongitude = newRow.insertCell()
 
-        let newDate = new Date()
-        let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + " - " + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s" + newDate.getMilliseconds() + "ms"
-        let newTextTimestamp = createElement('span', {
-            class: 'badge bg-secondary',
-        })
-        newTextTimestamp.innerHTML = displayDate;
-        newCellTimestamp.appendChild(newTextTimestamp)
+        // let newDate = new Date()
+        // let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + " - " + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s" + newDate.getMilliseconds() + "ms"
+        // let newTextTimestamp = createElement('span', {
+        //     class: 'badge bg-secondary',
+        // })
+        // newTextTimestamp.innerHTML = displayDate;
+        // newCellTimestamp.appendChild(newTextTimestamp)
 
         let newTextLatitude = document.createTextNode(latitude)
         newCellLatitude.appendChild(newTextLatitude)
