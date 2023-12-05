@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartage</title>
+    <link rel="stylesheet" href="./assets/css/_style.css">
+    <script type="module" src="./assets/javascript/_app.js"></script>
+</head>
+
+<body>
+    <h1>Hello world.</h1>
+
+    <button id="resetPositionButton">Reset</button>
+    <button id="getCurrentPositionButton">Ma position ?</button>
+    <button id="startWatchPositionButton">Start</button>
+    <button id="stopWatchPositionButton" hidden>Stop</button>
+
+    <h2>Résultats</h2>
+    <div id="resultPosition">
+        <div id="distanceTotale">
+            <h3>Distance totale parcourue</h3>
+            <div id="distanceTotaleValue"></div>
+        </div>
+        <div id="currentPosition">
+            <h3>Position actuelle</h3>
+            <div class="latitude"><b>Latitude :</b> <span id="currentLatitudeValue" class="value"></span></div>
+            <div class="longitude"><b>Longitude :</b> <span id="currentLongitudeValue" class="value"></span></div>
+        </div>
+        <div id="historyPosition">
+            <h3>Historique des positions</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+#resultPosition {
+    display: flex;
+    column-gap: 15px;
+    /* padding: 20px;
+    border: 1px solid grey;
+    border-radius: 10px; */
+}
+
+#distanceTotale {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#currentPosition {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#historyPosition {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    width: 60%;
+    padding-left: 15px;
+}
+
+#historyPosition table {
+    width: 100%;
+}
+
+#historyPosition th {
+    width: 50%;
+    padding: 10px 0;
+    border-top: 1px solid rgb(230, 230, 230);
+    border-bottom: 1px solid rgb(230, 230, 230);
+}
+
+h3 {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
+    text-align: center;
+}
