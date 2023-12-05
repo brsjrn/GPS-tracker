@@ -1,3 +1,5 @@
+import { createElement } from "../fonctions/dom.js"
+
 export default class Track {
 
     #distance = 0
@@ -69,10 +71,6 @@ export default class Track {
         this.#status = 2
     }
 
-    displayDistanceValue() {
-        console.log("Dostance : " + distance);
-    }
-
     /* DOM */
 
     /**
@@ -80,37 +78,53 @@ export default class Track {
      * @param {HTMLElement} element 
      */
     renderTrack(element) {
-        element.innerHTML = `<h2 class="title">${this.#title}</h2>
-        <div id="buttons">
-            <button id="btnReset">Reset</button>
-            <button id="btnEnd">Terminer</button>
-            <button id="btnStart">Start</button>
-            <button id="btnPause" hidden>Pause</button>
+        element.innerHTML = `
+        <div id="track-top" class="bg-light">
+            <h2 class="title">${this.#title}</h2>
+
+            <div id="buttons" class="btn-group" role="group">
+                <button id="btnReset" class="btn btn-warning">Reset</button>
+                <button id="btnEnd" class="btn btn-danger">Terminer</button>
+                <button id="btnPause" class="btn btn-secondary" hidden>Pause</button>
+                <button id="btnStart" class="btn btn-success">Start</button>
+            </div>
         </div>
+        
 
         <div id="resuts">
-            <h2>Résultats</h2>
             <div id="resultColumns">
 
                 <!-- Distance totale -->
-                <section id="distanceTotale">
-                    <h3>Distance totale parcourue</h3>
-                    <div id="valueDistance">-</div>
+                <section id="distanceTotale" class="container">
+                    <div class="card">
+                        <div class="card-header">
+                            Distance totale parcourue
+                        </div>
+                        <div class="card-body">
+                            <h5 id="valueDistance" class="card-title">En attente ...</h5>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Historique des positions -->
-                <section id="positionHistory">
-                    <h3>Historique des positions</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Timestamp</th>
-                                <th>Latitude</th>
-                                <th>Longitude</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                <section id="positionHistory" class="container">
+                    <div class="card">
+                        <div class="card-header">
+                        Historique des positions
+                        </div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Latitude</th>
+                                        <th>Longitude</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </section>
             </div>
         </div>`
@@ -139,41 +153,35 @@ export default class Track {
 
         // Start voyage
         this.#btnStart.addEventListener('click', () => {
-            console.log("[START] Watch position");
-
             // Hide start button
-            this.#btnStart.hidden = true;
+            this.#btnStart.hidden = true
 
             // Display stop button
-            this.#btnPause.hidden = false;
+            this.#btnPause.hidden = false
 
             // Call geolocation API
             this.#watchId = navigator.geolocation.watchPosition(position => {
-                const { latitude, longitude } = position.coords;
+                const { latitude, longitude } = position.coords
 
                 this.appendPosition(position);
 
-                this.addHistoryEntry(latitude, longitude);
+                this.addHistoryEntry(latitude, longitude)
             });
         })
 
         // Pause voyage
         this.#btnPause.addEventListener("click", () => {
-            console.log("[Pause]");
-
             // Hide pause button
-            this.#btnPause.hidden = true;
+            this.#btnPause.hidden = true
 
             // Display start button
-            this.#btnStart.hidden = false;
+            this.#btnStart.hidden = false
 
-            this.addHistoryEntry(this.#PauseText, this.#PauseText, this.#PauseText);
+            this.addHistoryEntry(this.#PauseText, this.#PauseText, this.#PauseText)
         });
 
         // Terminer voyage
         this.#btnEnd.addEventListener("click", () => {
-            console.log("[END]")
-
             // End watch
             this.end()
 
@@ -185,7 +193,7 @@ export default class Track {
         this.#btnReset.addEventListener("click", () => {
             if (confirm("Êtes-vous sûr de vouloir réinitialiser ce voyage ?")) {
                 // Clear watch position
-                navigator.geolocation.clearWatch(this.#watchId);
+                navigator.geolocation.clearWatch(this.#watchId)
 
                 // Reset positions
                 this.resetPositions()
@@ -204,19 +212,19 @@ export default class Track {
 
     resetButtons() {
         // Hide start button
-        this.#btnStart.hidden = false;
+        this.#btnStart.hidden = false
 
         // Display stop button
-        this.#btnPause.hidden = true;
+        this.#btnPause.hidden = true
     }
 
     resetHistoryTable() {
-        this.#tBodyPositionHistory.innerHTML = null;
+        this.#tBodyPositionHistory.innerHTML = null
     }
 
     resetDistance() {
-        this.#distance = 0;
-        this.updateDistance();
+        this.#distance = 0
+        this.updateDistance()
     }
 
     resetPositions() {
@@ -225,8 +233,8 @@ export default class Track {
 
     updateDistance() {
 
-        let distanceToDisplay = this.#distance;
-        let unit = "km";
+        let distanceToDisplay = this.#distance
+        let unit = "km"
 
         // if(distance < 1) {
         //     distanceToDisplay = convertKmToM(distance);
@@ -234,20 +242,18 @@ export default class Track {
         // }
 
         // distanceTotaleValue.innerHTML = (Math.round((distanceToDisplay + Number.EPSILON) * 100) / 100) + unit;
-        this.#valueDistance.innerHTML = distanceToDisplay + unit;
+        this.#valueDistance.innerHTML = distanceToDisplay + unit
     }
 
     appendPosition(position) {
-        console.log(this.#positions)
-
         // Calculate distance from last position if available
-        let lastPos = this.#positions[this.#positions.length - 1];
+        let lastPos = this.#positions[this.#positions.length - 1]
         if (lastPos) {
-            this.#distance += this.calculateDistance(lastPos.coords, position.coords);
+            this.#distance += this.calculateDistance(lastPos.coords, position.coords)
         }
 
         // Add new coordinates to array
-        this.#positions.push(position);
+        this.#positions.push(position)
 
         this.updateDistance();
 
@@ -258,39 +264,42 @@ export default class Track {
     }
 
     calculateDistance(fromPos, toPos) {
-        let radius = 6371;
+        let radius = 6371
         let toRad = function (number) {
-            return number * Math.PI / 180;
-        };
+            return number * Math.PI / 180
+        }
 
-        let latDistance = toRad(toPos.latitude - fromPos.latitude);
-        let lonDistance = toRad(toPos.longitude - fromPos.longitude);
+        let latDistance = toRad(toPos.latitude - fromPos.latitude)
+        let lonDistance = toRad(toPos.longitude - fromPos.longitude)
 
-        let a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
+        let a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + 
             Math.cos(toRad(fromPos.latitude)) * Math.cos(toRad(toPos.latitude)) *
             Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 
-        return radius * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+        return radius * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)))
     }
 
     addHistoryEntry(latitude, longitude) {
 
         let newRow = this.#tBodyPositionHistory.insertRow(0);
 
-        let newCellTimestamp = newRow.insertCell();
-        let newCellLatitude = newRow.insertCell();
-        let newCellLongitude = newRow.insertCell();
+        let newCellTimestamp = newRow.insertCell()
+        let newCellLatitude = newRow.insertCell()
+        let newCellLongitude = newRow.insertCell()
 
-        let newDate = new Date();
-        let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + " - " + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s" + newDate.getMilliseconds() + "ms";
-        let newTextTimestamp = document.createTextNode(displayDate);
-        newCellTimestamp.appendChild(newTextTimestamp);
+        let newDate = new Date()
+        let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + " - " + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s" + newDate.getMilliseconds() + "ms"
+        let newTextTimestamp = createElement('span', {
+            class: 'badge bg-secondary',
+        })
+        newTextTimestamp.innerHTML = displayDate;
+        newCellTimestamp.appendChild(newTextTimestamp)
 
-        let newTextLatitude = document.createTextNode(latitude);
-        newCellLatitude.appendChild(newTextLatitude);
+        let newTextLatitude = document.createTextNode(latitude)
+        newCellLatitude.appendChild(newTextLatitude)
 
-        let newTextLongitude = document.createTextNode(longitude);
-        newCellLongitude.appendChild(newTextLongitude);
+        let newTextLongitude = document.createTextNode(longitude)
+        newCellLongitude.appendChild(newTextLongitude)
     }
 
 }

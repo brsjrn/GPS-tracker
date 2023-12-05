@@ -10,14 +10,16 @@ Web app to POC GPS tracking from browser on a smartphone.
 ## Versions
 
 ### Backlog
-- [ ] Redesign avec Bootstrap ou Tailwind
 - [ ] Carte (https://leafletjs.com/)
 - [ ] Utilisation des Signaux javascript pour update de l'interface
 - [ ] Calculer vitesse moyenne
 - [ ] Calculer frais kilométriques
 - [ ] Distance en mètres tant qu'il y a moins d'1kg de parcouru
 
-### v0.4 (current)
+### v0.41 (current)
+- [x] Redesign avec Bootstrap
+
+### v0.4
 - [x] Systeme de "voyages"
 - [x] Refacto POO JS
 
