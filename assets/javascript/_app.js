@@ -84,6 +84,9 @@ resetPositionButton.addEventListener("click", function () {
 
     // Reset history table
     resetHistoryTable();
+
+    // Reset distance totale
+    resetDistance();
 })
 
 // --- UI datas
@@ -92,12 +95,13 @@ function updateDistanceTotale() {
     let distanceToDisplay = distance;
     let unit = "km";
 
-    if(distance < 1) {
-        distanceToDisplay = convertKmToM(distance);
-        unit = "m";
-    }
+    // if(distance < 1) {
+    //     distanceToDisplay = convertKmToM(distance);
+    //     unit = "m";
+    // }
 
-    distanceTotaleValue.innerHTML = (Math.round((distanceToDisplay + Number.EPSILON) * 100) / 100) + unit;
+    // distanceTotaleValue.innerHTML = (Math.round((distanceToDisplay + Number.EPSILON) * 100) / 100) + unit;
+    distanceTotaleValue.innerHTML = distanceToDisplay + unit;
 }
 
 function updateCurrentPosition(latitude, longitude) {
