@@ -9,45 +9,6 @@ h1 {
     margin: 0;
 }
 
-#resultPosition {
-    display: flex;
-    column-gap: 15px;
-    text-align: center;
-}
-
-#distanceTotale {
-    border: 1px solid black;
-    border-radius: 5px;
-    padding: 10px;
-    width: 20%;
-}
-
-#currentPosition {
-    border: 1px solid black;
-    border-radius: 5px;
-    padding: 10px;
-    width: 20%;
-}
-
-#historyPosition {
-    border: 1px solid black;
-    border-radius: 5px;
-    padding: 10px;
-    width: 60%;
-    padding-left: 15px;
-}
-
-#historyPosition table {
-    width: 100%;
-}
-
-#historyPosition th {
-    width: 50%;
-    padding: 10px 0;
-    border-top: 1px solid rgb(230, 230, 230);
-    border-bottom: 1px solid rgb(230, 230, 230);
-}
-
 h3 {
     padding: 0;
     margin: 0;
@@ -55,8 +16,91 @@ h3 {
     text-align: center;
 }
 
+h2 {
+    margin: 0;
+}
+
+#content {
+    position: relative;
+}
+
+#main {
+    position: relative;
+    z-index: 2;
+}
+
+#formNewTrack {
+    margin-bottom: 20px;
+}
+
+#voyage {
+    z-index: 3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: auto;
+    background-color: rgb(238, 238, 238);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid rgb(196, 196, 196);
+}
+
+#buttons {
+    margin-top: 20px;
+}
+
+#resuts {
+    margin-top: 20px;
+}
+
+#resultColumns {
+    display: flex;
+    column-gap: 15px;
+    text-align: center;
+}
+
+#distanceTotale, #positionHistory, #history  {
+    border: 1px solid rgb(182, 182, 182);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#distanceTotale {
+    border-radius: 10px;
+    padding: 10px;
+    width: 20%;
+}
+
+#positionHistory {
+    width: 60%;
+    padding-left: 15px;
+}
+
+#history {
+    border-radius: 10px;
+    width: auto;
+    background-color: rgb(238, 238, 238);
+    text-align: center;
+}
+
+table {
+    width: 100%;
+}
+
+th {
+    width: 50%;
+    padding: 10px 0;
+    border-top: 1px solid rgb(230, 230, 230);
+    border-bottom: 1px solid rgb(230, 230, 230);
+}
+
+section {
+    background-color: #fff;
+}
+
 @media (max-width: 1250px) {
-    #resultPosition {
+    #resultColumns {
         display: block
     }
 

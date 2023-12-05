@@ -1,191 +1,60 @@
+import Track from "./composans/track.js";
+
 // -----------
 // Geolocation
 // -----------
 
 // --- Get UI elements
-let getCurrentPositionButton = document.getElementById("getCurrentPositionButton");
-let startWatchPositionButton = document.getElementById("startWatchPositionButton");
-let stopWatchPositionButton = document.getElementById("stopWatchPositionButton");
-let resetPositionButton = document.getElementById("resetPositionButton");
-let currentLatitude = document.getElementById("currentLatitudeValue");
-let currentLongitude = document.getElementById("currentLongitudeValue");
-let historyPositionTBody = document.getElementById('historyPosition').getElementsByTagName('tbody')[0];
-let distanceTotaleValue = document.getElementById("distanceTotaleValue");
+// let getCurrentPositionButton = document.getElementById("getCurrentPositionButton");
+// let startWatchPositionButton = document.getElementById("startWatchPositionButton");
+// let stopWatchPositionButton = document.getElementById("stopWatchPositionButton");
+// let resetPositionButton = document.getElementById("resetPositionButton");
+// let currentLatitude = document.getElementById("currentLatitudeValue");
+// let currentLongitude = document.getElementById("currentLongitudeValue");
+// let historyPositionTBody = document.getElementById('historyPosition').getElementsByTagName('tbody')[0];
+// let distanceTotaleValue = document.getElementById("distanceTotaleValue");
 
 // --- Variables
-let watchId;
-let coords = [];
-let distance = 0;
+let listTracks = []
+/**
+ * @type Track
+ */
+let currentTrack
 
-// --- Buttons triggers
+const voyage = document.querySelector("#voyage")
+const formNewTrack = document.querySelector("#formNewTrack")
 
-// Get current position
-getCurrentPositionButton.addEventListener("click", function (e) {
-    navigator.geolocation.getCurrentPosition(position => {
-        const { latitude, longitude } = position.coords;
-        updateCurrentPosition(latitude, longitude);
+// Nouveau voyage
+formNewTrack.addEventListener("submit", function (e) {
+    e.preventDefault()
 
-        appendPosition(position);
-
-        // console.log("Position : "+ calculateDistance(position, position));
-    });
-});
-
-// Start watch position
-startWatchPositionButton.addEventListener("click", function (e) {
-
-    console.log("[START] Watch position");
-
-    // Hide start button
-    startWatchPositionButton.hidden = true;
-
-    // Display stop button
-    stopWatchPositionButton.hidden = false;
-
-    // Call geolocation API
-    watchId = navigator.geolocation.watchPosition(position => {
-        const { latitude, longitude } = position.coords;
-
-        appendPosition(position);
-
-        updateCurrentPosition(latitude, longitude);
-
-        addHistoryEntry(latitude, longitude);
-    });
-});
-
-// Stop watch position
-stopWatchPositionButton.addEventListener("click", function () {
-    console.log("[STOP]");
-
-    // Hide stop button
-    stopWatchPositionButton.hidden = true;
-
-    // Display start button
-    startWatchPositionButton.hidden = false;
-
-    // Clear watch position
-    navigator.geolocation.clearWatch(watchId);
-
-    updateCurrentPosition("stop", "stop");
-    addHistoryEntry("stop", "stop", "stop");
-});
-
-// Reset datas positions
-resetPositionButton.addEventListener("click", function () {
-    // Clear watch position
-    navigator.geolocation.clearWatch(watchId);
-
-    // Reset buttons
-    resetButtons();
-
-    // Update current position
-    updateCurrentPosition("", "")
-
-    // Reset history table
-    resetHistoryTable();
-
-    // Reset distance totale
-    resetDistance();
-})
-
-// --- UI datas
-function updateDistanceTotale() {
-
-    let distanceToDisplay = distance;
-    let unit = "km";
-
-    // if(distance < 1) {
-    //     distanceToDisplay = convertKmToM(distance);
-    //     unit = "m";
-    // }
-
-    // distanceTotaleValue.innerHTML = (Math.round((distanceToDisplay + Number.EPSILON) * 100) / 100) + unit;
-    distanceTotaleValue.innerHTML = distanceToDisplay + unit;
-}
-
-function updateCurrentPosition(latitude, longitude) {
-    currentLongitude.innerHTML = longitude;
-    currentLatitude.innerHTML = latitude;
-}
-
-function addHistoryEntry(latitude, longitude) {
-
-    let newRow = historyPositionTBody.insertRow(0);
-
-    let newCellTimestamp = newRow.insertCell();
-    let newCellLatitude = newRow.insertCell();
-    let newCellLongitude = newRow.insertCell();
-
-    let newDate = new Date();
-    let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + " - " + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s" + newDate.getMilliseconds() + "ms";
-    let newTextTimestamp = document.createTextNode(displayDate);
-    newCellTimestamp.appendChild(newTextTimestamp);
-
-    let newTextLatitude = document.createTextNode(latitude);
-    newCellLatitude.appendChild(newTextLatitude);
-
-    let newTextLongitude = document.createTextNode(longitude);
-    newCellLongitude.appendChild(newTextLongitude);
-}
-
-function resetHistoryTable() {
-    let new_tbody = document.createElement('tbody');
-
-    // historyPositionTBody.parentNode.replaceChild(new_tbody, historyPositionTBody);
-    historyPositionTBody.innerHTML = null;
-}
-
-function resetButtons() {
-    // Hide start button
-    startWatchPositionButton.hidden = false;
-
-    // Display stop button
-    stopWatchPositionButton.hidden = true;
-}
-
-function resetDistance() {
-    distance = 0;
-    updateDistanceTotale();
-}
-
-// --- GPS datas
-// Calcule la distance entre 2 positions
-function calculateDistance(fromPos, toPos) {
-    let radius = 6371;
-    let toRad = function (number) {
-        return number * Math.PI / 180;
-    };
-
-    let latDistance = toRad(toPos.latitude - fromPos.latitude);
-    let lonDistance = toRad(toPos.longitude - fromPos.longitude);
-
-    let a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
-        Math.cos(toRad(fromPos.latitude)) * Math.cos(toRad(toPos.latitude)) *
-        Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-
-    return radius * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
-}
-
-function appendPosition(position) {
-    // Calculate distance from last position if available
-    let lastPos = coords[coords.length - 1];
-    if (lastPos) {
-        distance += calculateDistance(lastPos, position.coords);
+    // Clear l'ancien voyage
+    if (currentTrack !== undefined) {
+        currentTrack.end()
     }
 
-    // Add new coordinates to array
-    coords.push(position.coords);
+    // Affiche le nouveau voyage
+    voyage.hidden = false;
 
-    updateDistanceTotale();
+    // Récupère le titre du voyage
+    const title = new FormData(e.currentTarget).get('title').toString()
+    // Reset form
+    e.currentTarget.reset()
 
-    // Call custom callback
-    // if(watchCallback) {
-    //     watchCallback(position, distance, watchID);
-    // }
-}
+    // Crée un nouveau voyage & l'enregistre comme voyage courant
+    const track = new Track(title)
+    currentTrack = track
+    // le rajouter à l'historique des voyages
+    listTracks.push(track)
+    // Rend la vue voyage
+    track.renderTrack(voyage)
 
-// --- Utils
-function convertKmToM(val) {
-    return (val * 1000);
-}
+    // Met à jour l'historique
+    const newHistoryRow = document.querySelector("#history").querySelector("tbody").insertRow(0);
+
+    const newCellTitle = newHistoryRow.insertCell();
+    const newCellStatus = newHistoryRow.insertCell();
+
+    newCellTitle.appendChild(document.createTextNode(currentTrack.getTitle()))
+    newCellStatus.appendChild(document.createTextNode(currentTrack.getStatus()))
+})

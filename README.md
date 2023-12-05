@@ -4,20 +4,28 @@ Web app to POC GPS tracking from browser on a smartphone.
 
 <a href="https://brsjrn-gps-tracking.netlify.app/" target="_blank">Demo</a>
 
+# Ressources
+- How to calculate distance between GPS positions : http://www.movable-type.co.uk/scripts/latlong.html
+
 ## Versions
 
 ### Backlog
-- [ ] Redesign avec Bootstrap
-- [ ] Refacto POO JS
+- [ ] Redesign avec Bootstrap ou Tailwind
 - [ ] Carte (https://leafletjs.com/)
 - [ ] Utilisation des Signaux javascript pour update de l'interface
+- [ ] Calculer vitesse moyenne
+- [ ] Calculer frais kilométriques
+- [ ] Distance en mètres tant qu'il y a moins d'1kg de parcouru
 
-### v0.3 (current)
+### v0.4 (current)
+- [x] Systeme de "voyages"
+- [x] Refacto POO JS
+
+### v0.3
 - [x] Responsive smartphone
 - [x] Lien vers Github
 - [x] Apparition des positions par le haut dans le tableau d'historique
 - [x] Ajout colonne Timestamp dans le tableau d'historique 
-- [ ] Distance en mètres tant qu'il y a moins d'1kg de parcouru
 
 ### v0.2
 - [x] Distance parcourue

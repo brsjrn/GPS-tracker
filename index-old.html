@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS tracking</title>
+    <link rel="stylesheet" href="./assets/css/_style.css">
+    <script type="module" src="./assets/javascript/_app.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>GPS tracking.</h1>
+        <div id="github">
+            <a href="https://github.com/brsjrn/GPS-tracker" target="_blank" rel="noopener noreferrer">Github</a>
+        </div>
+    </header>
+
+    <div id="buttons">
+        <button id="resetPositionButton">Reset</button>
+        <button id="getCurrentPositionButton">Ma position ?</button>
+        <button id="startWatchPositionButton">Start</button>
+        <button id="stopWatchPositionButton" hidden>Stop</button>
+    </div>
+
+    <h2>Résultats</h2>
+    <div id="resultPosition">
+
+        <!-- Distance totale -->
+        <section id="distanceTotale">
+            <h3>Distance totale parcourue</h3>
+            <div id="distanceTotaleValue">0</div>
+        </section>
+
+        <!-- Position actuelle -->
+        <section id="currentPosition">
+            <h3>Position actuelle</h3>
+            <div class="latitude"><b>Latitude :</b> <span id="currentLatitudeValue" class="value"></span></div>
+            <div class="longitude"><b>Longitude :</b> <span id="currentLongitudeValue" class="value"></span></div>
+        </section>
+
+        <!-- Historique des positions -->
+        <section id="historyPosition">
+            <h3>Historique des positions</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </div>
+</body>
+
+</html>
