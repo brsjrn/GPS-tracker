@@ -1,5 +1,6 @@
 import { createElement, createModal } from "../fonctions/dom.js"
 import { addHistoryTrack } from "../_app.js"
+import Map from "./map.js"
 
 export default class Track {
 
@@ -22,6 +23,7 @@ export default class Track {
 
     // Elements
     #tBodyPositionHistory
+    #map
 
     // Modals
     // #modalCancel
@@ -30,8 +32,7 @@ export default class Track {
 
     // Values
     #valueDistance
-    #valueLatitude
-    #valueLongitude
+    #valuePosition
     #valuePositionActuelle
 
     // Const
@@ -56,6 +57,25 @@ export default class Track {
 
         this.#lastLatitude = 0
         this.#lastLongitude = 0
+
+        this.initMap()
+    }
+
+    // Initialise la carte avec un 1er appel de position
+    initMap() {
+        navigator.geolocation.getCurrentPosition(position => {
+            const { latitude, longitude } = position.coords
+
+            this.#map = new Map('mapTrack', position, 19)
+            this.#map.displayMap()
+            // this.#map.addMarker(position)
+
+            watchGPS()
+        }, () => { }, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0,
+        });
     }
 
     /**
@@ -132,8 +152,11 @@ export default class Track {
                     </div>
                 </section>
 
+                <!-- Map -->
+                <div id="mapTrack" class="container"></div>
+
                 <!-- Position actuelle -->
-                <section id="positionActuelle" class="container">
+                <!-- <section id="positionActuelle" class="container">
                     <div class="card">
                         <div class="card-header">
                             Position actuelle
@@ -142,7 +165,7 @@ export default class Track {
                             <h5 id="valuePositionActuelle" class="card-title">${this.#attenteText}</h5>
                         </div>
                     </div>
-                </section>
+                </section> -->
 
                 <!-- Historique des positions -->
                 <section id="positionHistory" class="container">
@@ -155,8 +178,7 @@ export default class Track {
                                 <thead>
                                     <tr>
                                         <th>Timestamp</th>
-                                        <th>Latitude</th>
-                                        <th>Longitude</th>
+                                        <th>Position</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -193,8 +215,6 @@ export default class Track {
 
         // Values
         this.#valueDistance = element.querySelector("#valueDistance")
-        this.#valueLatitude = element.querySelector("#valueLatitude")
-        this.#valueLongitude = element.querySelector("#valueLongitude")
         this.#valuePositionActuelle = element.querySelector("#valuePositionActuelle")
 
         // -------------------
@@ -239,6 +259,9 @@ export default class Track {
                     this.appendPosition(position);
 
                     this.addHistoryEntry(latitude, longitude)
+
+                    // Add position on map
+                    this.#map.addMarker(position)
 
                     console.log("Différence détectée !")
                 }
@@ -386,8 +409,7 @@ export default class Track {
         let newRow = this.#tBodyPositionHistory.insertRow(0);
 
         let newCellTimestamp = newRow.insertCell()
-        let newCellLatitude = newRow.insertCell()
-        let newCellLongitude = newRow.insertCell()
+        let newCellLPosition = newRow.insertCell()
 
         let newDate = new Date()
         let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + " - " + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s"
@@ -397,11 +419,8 @@ export default class Track {
         newTextTimestamp.innerHTML = displayDate;
         newCellTimestamp.appendChild(newTextTimestamp)
 
-        let newTextLatitude = document.createTextNode(latitude)
-        newCellLatitude.appendChild(newTextLatitude)
-
-        let newTextLongitude = document.createTextNode(longitude)
-        newCellLongitude.appendChild(newTextLongitude)
+        let newTextPosition = document.createTextNode(latitude + ", " + longitude)
+        newCellLPosition.appendChild(newTextPosition)
     }
 
 }

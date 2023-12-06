@@ -1,12 +1,42 @@
 import { createElement, createModal } from "./fonctions/dom.js";
-import Track from "./composans/track.js";
+import Track from "./composants/track.js";
+import Map from "./composants/map.js";
 
 // -----------
 // Geolocation
 // -----------
 
 // --- Variables
+
+// Globals
 export let listTracks = []
+
+// var newMap
+// navigator.geolocation.getCurrentPosition(position => {
+//     const { latitude, longitude } = position.coords
+
+//     newMap = new Map('mapTest', position, 19)
+//     newMap.displayMap()
+//     newMap.addMarker(position)
+
+//     watchGPS()
+// }, () => {}, {
+//     enableHighAccuracy: true,
+//     timeout: 5000,
+//     maximumAge: 0,
+// });
+
+// function watchGPS() {
+//     navigator.geolocation.watchPosition(position => {
+//         console.log("Watch position")
+//         newMap.addMarker(position)
+//     }, () => {}, {
+//         enableHighAccuracy: true,
+//         timeout: 5000,
+//         maximumAge: 0,
+//     });
+// }
+
 /**
  * @type Track
  */
