@@ -36,6 +36,7 @@ export default class Track {
 
     // Const
     #PauseText = "Pause"
+    #attenteText = "En attente ..."
 
     // Varialbes
     #lastLatitude
@@ -80,9 +81,13 @@ export default class Track {
         return this.#date
     }
 
-    end() {
-        console.log("Voyage terminé !")
+    clearTrack() {
         navigator.geolocation.clearWatch(this.#watchId)
+        this.#status = 0
+    }
+
+    end() {
+        this.clearTrack()
         this.#status = 2
         // Update history view
         addHistoryTrack(this)
@@ -122,7 +127,7 @@ export default class Track {
                             Distance totale parcourue
                         </div>
                         <div class="card-body">
-                            <h5 id="valueDistance" class="card-title">En attente ...</h5>
+                            <h5 id="valueDistance" class="card-title">${this.#attenteText}</h5>
                         </div>
                     </div>
                 </section>
@@ -134,7 +139,7 @@ export default class Track {
                             Position actuelle
                         </div>
                         <div class="card-body">
-                            <h5 id="valuePositionActuelle" class="card-title">En attente ...</h5>
+                            <h5 id="valuePositionActuelle" class="card-title">${this.#attenteText}</h5>
                         </div>
                     </div>
                 </section>
@@ -204,7 +209,11 @@ export default class Track {
                 const { latitude, longitude } = position.coords
 
                 this.#valuePositionActuelle.innerHTML = latitude + ", " + longitude
-            }, this.error);
+            }, this.errorCurrent, {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0,
+            });
         })
 
         // Start voyage
@@ -217,6 +226,7 @@ export default class Track {
 
             // Call geolocation API
             this.#watchId = navigator.geolocation.watchPosition(position => {
+                console.log("Watch position")
                 const { latitude, longitude } = position.coords
 
                 if ((this.#lastLatitude != latitude) || (this.#lastLongitude != longitude) || (this.#status == 0)) {
@@ -232,22 +242,23 @@ export default class Track {
 
                     console.log("Différence détectée !")
                 }
-            }, this.error);
+            }, this.errorWatch, {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0,
+            });
         })
 
         // Pause voyage
         this.#btnPause.addEventListener("click", () => {
             // Clear previous watch
-            navigator.geolocation.clearWatch(this.#watchId)
+            this.clearTrack()
 
             // Hide pause button
             this.#btnPause.hidden = true
 
             // Display start button
             this.#btnStart.hidden = false
-
-            // Change status
-            this.#status = 0
 
             this.addHistoryEntry(this.#PauseText, this.#PauseText, this.#PauseText)
         });
@@ -264,9 +275,6 @@ export default class Track {
         // Reset datas positions
         this.#btnReset.addEventListener("click", () => {
             if (confirm("Êtes-vous sûr de vouloir réinitialiser ce voyage ?")) {
-                // Clear watch position
-                navigator.geolocation.clearWatch(this.#watchId)
-
                 // Reset positions
                 this.resetPositions()
 
@@ -278,23 +286,30 @@ export default class Track {
 
                 // Reset distance totale
                 this.resetDistance()
+
+                // Reset position actuelle
+                this.#valuePositionActuelle.innerHTML = this.#attenteText
+
+                // Reset watch
+                this.clearTrack()
             }
         })
 
         // Cancel
         this.#btnCancel.addEventListener("click", () => {
             // Clear watch position
-            navigator.geolocation.clearWatch(this.#watchId)
-
+            this.clearTrack()
             document.querySelector("#track").hidden = true
-
-
         })
     }
 
     // Error function watchPosition
-    error(err) {
-        console.error(`ERROR(${err.code}): ${err.message}`);
+    errorCurrent(err) {
+        console.error(`[Current] ERROR(${err.code}): ${err.message}`);
+    }
+
+    errorWatch(err) {
+        console.error(`[Watch] ERROR(${err.code}): ${err.message}`);
     }
 
     resetButtons() {
@@ -311,7 +326,7 @@ export default class Track {
 
     resetDistance() {
         this.#distance = 0
-        this.updateDistance()
+        this.#valueDistance.innerHTML = this.#attenteText
     }
 
     resetPositions() {
