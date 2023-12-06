@@ -219,7 +219,7 @@ export default class Track {
             // End watch
             this.end()
 
-            document.querySelector("#voyage").hidden = true
+            document.querySelector("#track").hidden = true
         })
 
         // Reset Track
@@ -248,7 +248,7 @@ export default class Track {
             // Clear watch position
             navigator.geolocation.clearWatch(this.#watchId)
 
-            document.querySelector("#voyage").hidden = true
+            document.querySelector("#track").hidden = true
         })
     }
 
