@@ -1,4 +1,5 @@
 import { createElement } from "../fonctions/dom.js"
+import { addHistoryTrack } from "../_app.js"
 
 export default class Track {
 
@@ -6,7 +7,8 @@ export default class Track {
     #positions = []
     #title
     #watchId
-    #status
+    #status // 1: started - 2: ended
+    #date
 
     // --- UI
 
@@ -15,6 +17,7 @@ export default class Track {
     #btnPause
     #btnEnd
     #btnReset
+    #btnCancel
 
     // Elements
     #tBodyPositionHistory
@@ -28,23 +31,16 @@ export default class Track {
     #PauseText = "Pause"
 
     constructor(title) {
-        let currentDate = new Date();
-        let titlePrefix = "[" + currentDate.getFullYear() + "/" + currentDate.getMonth() + "/" + currentDate.getDate() + "] ";
-
         if (title == "") {
-            this.#title = titlePrefix + "Sans nom"
+            this.#title = "Sans nom"
         } else {
-            this.#title = titlePrefix + title
+            this.#title = title
         }
 
         this.#status = 1
 
-        // Création de l'interface
-        // this.#btnStart = createElement(div, {
-        //     id: "buttonStartWatch"
-        // })
-        // this.#btnStart.innerHTML = "Start"
-
+        let newDate = new Date()
+        this.#date = newDate.getFullYear() +"/" + newDate.getMonth() +"/"+ newDate.getDate() 
     }
 
     /**
@@ -66,9 +62,16 @@ export default class Track {
         return this.#status
     }
 
+    getDate() {
+        return this.#date
+    }
+
     end() {
+        console.log("Voyage terminé !")
         navigator.geolocation.clearWatch(this.#watchId)
         this.#status = 2
+        // Update history view
+        addHistoryTrack(this)
     }
 
     /* DOM */
@@ -80,13 +83,19 @@ export default class Track {
     renderTrack(element) {
         element.innerHTML = `
         <div id="track-top" class="bg-light">
-            <h2 class="title">${this.#title}</h2>
+            <h1 class="track__title">${this.#title}</h1>
+            <div class="track__date fs-5"><span class="badge bg-secondary">${this.#date}</span></div>
 
             <div id="buttons" class="btn-group" role="group">
                 <button id="btnReset" class="btn btn-warning">Reset</button>
+                <button id="btnCancel" class="btn btn-secondary">Annuler</button>
                 <button id="btnEnd" class="btn btn-danger">Terminer</button>
-                <button id="btnPause" class="btn btn-secondary" hidden>Pause</button>
+                <button id="btnPause" class="btn btn-info" hidden>Pause</button>
                 <button id="btnStart" class="btn btn-success">Start</button>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Launch static backdrop modal
+                </button>
             </div>
         </div>
         
@@ -127,7 +136,28 @@ export default class Track {
                     </div>
                 </section>
             </div>
-        </div>`
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Understood</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `
 
         // -------------------
         //  Init UI elements
@@ -138,6 +168,7 @@ export default class Track {
         this.#btnPause = element.querySelector("#btnPause")
         this.#btnEnd = element.querySelector("#btnEnd")
         this.#btnReset = element.querySelector("#btnReset")
+        this.#btnCancel = element.querySelector("#btnCancel")
 
         // Elements
         this.#tBodyPositionHistory = element.querySelector("#positionHistory").querySelector("tbody")
@@ -171,6 +202,9 @@ export default class Track {
 
         // Pause voyage
         this.#btnPause.addEventListener("click", () => {
+            // Clear previous watch
+            navigator.geolocation.clearWatch(this.#watchId)
+
             // Hide pause button
             this.#btnPause.hidden = true
 
@@ -207,6 +241,14 @@ export default class Track {
                 // Reset distance totale
                 this.resetDistance()
             }
+        })
+
+        // Cancel
+        this.#btnCancel.addEventListener("click", () => {
+            // Clear watch position
+            navigator.geolocation.clearWatch(this.#watchId)
+
+            document.querySelector("#voyage").hidden = true
         })
     }
 

@@ -1,21 +1,12 @@
+import { createElement, createModal } from "./fonctions/dom.js";
 import Track from "./composans/track.js";
 
 // -----------
 // Geolocation
 // -----------
 
-// --- Get UI elements
-// let getCurrentPositionButton = document.getElementById("getCurrentPositionButton");
-// let startWatchPositionButton = document.getElementById("startWatchPositionButton");
-// let stopWatchPositionButton = document.getElementById("stopWatchPositionButton");
-// let resetPositionButton = document.getElementById("resetPositionButton");
-// let currentLatitude = document.getElementById("currentLatitudeValue");
-// let currentLongitude = document.getElementById("currentLongitudeValue");
-// let historyPositionTBody = document.getElementById('historyPosition').getElementsByTagName('tbody')[0];
-// let distanceTotaleValue = document.getElementById("distanceTotaleValue");
-
 // --- Variables
-let listTracks = []
+export let listTracks = []
 /**
  * @type Track
  */
@@ -24,14 +15,13 @@ let currentTrack
 const voyage = document.querySelector("#voyage")
 const formNewTrack = document.querySelector("#formNewTrack")
 
+// const modals = document.querySelector("#modals")
+// let newModal = createModal('staticBackdrop', "MA MODALE", "Hello :)")
+// modals.append(newModal)
+
 // Nouveau voyage
 formNewTrack.addEventListener("submit", function (e) {
     e.preventDefault()
-
-    // Clear l'ancien voyage
-    if (currentTrack !== undefined) {
-        currentTrack.end()
-    }
 
     // Affiche le nouveau voyage
     voyage.hidden = false;
@@ -44,17 +34,28 @@ formNewTrack.addEventListener("submit", function (e) {
     // Crée un nouveau voyage & l'enregistre comme voyage courant
     const track = new Track(title)
     currentTrack = track
-    // le rajouter à l'historique des voyages
-    listTracks.push(track)
+
     // Rend la vue voyage
     track.renderTrack(voyage)
+})
 
-    // Met à jour l'historique
+export function addHistoryTrack(track) {
+    // le rajouter à l'historique des voyages
+    listTracks.push(track)
+
+    // Ajoute une ligne au tableau d'historique
     const newHistoryRow = document.querySelector("#history").querySelector("tbody").insertRow(0);
 
+    const newCellDate = newHistoryRow.insertCell();
     const newCellTitle = newHistoryRow.insertCell();
     const newCellStatus = newHistoryRow.insertCell();
 
-    newCellTitle.appendChild(document.createTextNode(currentTrack.getTitle()))
-    newCellStatus.appendChild(document.createTextNode(currentTrack.getStatus()))
-})
+    let newDateBadge = createElement('span', {
+        class: 'badge bg-secondary',
+    })
+    newDateBadge.innerHTML = track.getDate();
+    newCellDate.appendChild(newDateBadge)
+
+    newCellTitle.appendChild(document.createTextNode(track.getTitle()))
+    newCellStatus.appendChild(document.createTextNode(track.getDistance()))
+}

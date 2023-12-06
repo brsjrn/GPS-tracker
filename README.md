@@ -9,12 +9,17 @@ Web app to POC GPS tracking from browser on a smartphone.
 
 ## Versions
 
+### Bugs
+- [ ] Les watchPositions ne s'arrêtent pas
+
 ### Backlog
 - [ ] Carte (https://leafletjs.com/)
 - [ ] Utilisation des Signaux javascript pour update de l'interface
 - [ ] Calculer vitesse moyenne
 - [ ] Calculer frais kilométriques
 - [ ] Distance en mètres tant qu'il y a moins d'1kg de parcouru
+- [x] Track : btn "annuler" en plus de "terminer"
+- [ ] Modals Bootstrap pour annuler, reset, terminer
 
 ### v0.41 (current)
 - [x] Redesign avec Bootstrap
