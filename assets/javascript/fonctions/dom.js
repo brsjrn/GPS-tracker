@@ -37,7 +37,5 @@ export function createModal(id, title, message) {
     </div>
     `
 
-    
-
     return modal
 }
