@@ -17,6 +17,7 @@ Web app to POC GPS tracking from browser on a smartphone.
 - [ ] Distance en mètres tant qu'il y a moins d'1kg de parcouru
 - [ ] Modals Bootstrap pour annuler, reset, terminer
 - [ ] PWA
+- [ ] Récupérer le Timestamp depuis l'objet Geolocation.position
 
 ### v0.1.4 (current)
 - [x] Systeme de "voyages"

@@ -7,7 +7,7 @@ export default class Track {
     #positions = []
     #title
     #watchId
-    #status // 1: started - 2: ended
+    #status // 0: pause 1: started - 2: ended
     #date
 
     // --- UI
@@ -37,11 +37,9 @@ export default class Track {
     // Const
     #PauseText = "Pause"
 
-    #options = {
-        enableHighAccuracy: false,
-        timeout: 5000,
-        maximumAge: 0,
-    };
+    // Varialbes
+    #lastLatitude
+    #lastLongitude
 
     constructor(title) {
         if (title == "") {
@@ -54,6 +52,9 @@ export default class Track {
 
         let newDate = new Date()
         this.#date = newDate.getFullYear() + "/" + newDate.getMonth() + "/" + newDate.getDate()
+
+        this.#lastLatitude = 0
+        this.#lastLongitude = 0
     }
 
     /**
@@ -202,8 +203,8 @@ export default class Track {
             navigator.geolocation.getCurrentPosition(position => {
                 const { latitude, longitude } = position.coords
 
-                this.#valuePositionActuelle.innerHTML = latitude +", "+ longitude
-            }, this.error, this.#options);
+                this.#valuePositionActuelle.innerHTML = latitude + ", " + longitude
+            }, this.error);
         })
 
         // Start voyage
@@ -218,12 +219,20 @@ export default class Track {
             this.#watchId = navigator.geolocation.watchPosition(position => {
                 const { latitude, longitude } = position.coords
 
-                console.log(position);
+                if ((this.#lastLatitude != latitude) || (this.#lastLongitude != longitude) || (this.#status == 0)) {
+                    this.#lastLatitude = latitude
+                    this.#lastLongitude = longitude
 
-                this.appendPosition(position);
+                    // Change status
+                    this.#status = 1
 
-                this.addHistoryEntry(latitude, longitude)
-            }, this.error, this.#options);
+                    this.appendPosition(position);
+
+                    this.addHistoryEntry(latitude, longitude)
+
+                    console.log("Différence détectée !")
+                }
+            }, this.error);
         })
 
         // Pause voyage
@@ -236,6 +245,9 @@ export default class Track {
 
             // Display start button
             this.#btnStart.hidden = false
+
+            // Change status
+            this.#status = 0
 
             this.addHistoryEntry(this.#PauseText, this.#PauseText, this.#PauseText)
         });
