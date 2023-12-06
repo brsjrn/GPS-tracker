@@ -12,9 +12,9 @@ export function createModal(id, title, message) {
     let modal = createElement("div", {
         id: id,
         class: "modal fade",
-        'data-bs-backdrop': "static",
-        'data-bs-keyboard': "false",
-        'tabindex': "-1"
+        // 'data-bs-backdrop': "static",
+        // 'data-bs-keyboard': "false",
+        // 'tabindex': "-1"
     })
 
     // modal.setAttribute('data-bs-backdrop', 'static')

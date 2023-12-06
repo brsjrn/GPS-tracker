@@ -1,4 +1,4 @@
-import { createElement } from "../fonctions/dom.js"
+import { createElement, createModal } from "../fonctions/dom.js"
 import { addHistoryTrack } from "../_app.js"
 
 export default class Track {
@@ -22,6 +22,11 @@ export default class Track {
     // Elements
     #tBodyPositionHistory
 
+    // Modals
+    // #modalCancel
+    // #modalEnd
+    // #modalReset
+
     // Values
     #valueDistance
     #valueLatitude
@@ -40,7 +45,7 @@ export default class Track {
         this.#status = 1
 
         let newDate = new Date()
-        this.#date = newDate.getFullYear() +"/" + newDate.getMonth() +"/"+ newDate.getDate() 
+        this.#date = newDate.getFullYear() + "/" + newDate.getMonth() + "/" + newDate.getDate()
     }
 
     /**
@@ -93,9 +98,6 @@ export default class Track {
                 <button id="btnPause" class="btn btn-info" hidden>Pause</button>
                 <button id="btnStart" class="btn btn-success">Start</button>
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                    Launch static backdrop modal
-                </button>
             </div>
         </div>
         
@@ -139,25 +141,13 @@ export default class Track {
         </div>
         
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Understood</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- <div id="trackModals"></div> -->
         `
+
+        // const modals = element.querySelector("#trackModals")
+        // this.#modalCancel = createModal('staticBackdrop', "MA MODALE", "Hello :)")
+        // modals.innerHTML = "plop"
+        // modals.append(this.#modalCancel)
 
         // -------------------
         //  Init UI elements
@@ -249,6 +239,8 @@ export default class Track {
             navigator.geolocation.clearWatch(this.#watchId)
 
             document.querySelector("#track").hidden = true
+
+
         })
     }
 
@@ -314,7 +306,7 @@ export default class Track {
         let latDistance = toRad(toPos.latitude - fromPos.latitude)
         let lonDistance = toRad(toPos.longitude - fromPos.longitude)
 
-        let a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + 
+        let a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
             Math.cos(toRad(fromPos.latitude)) * Math.cos(toRad(toPos.latitude)) *
             Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 
