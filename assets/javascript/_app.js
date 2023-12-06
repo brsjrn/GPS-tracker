@@ -12,7 +12,7 @@ export let listTracks = []
  */
 let currentTrack
 
-const voyage = document.querySelector("#voyage")
+const voyage = document.querySelector("#track")
 const formNewTrack = document.querySelector("#formNewTrack")
 
 // const modals = document.querySelector("#modals")
