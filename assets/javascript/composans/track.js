@@ -18,6 +18,7 @@ export default class Track {
     #btnEnd
     #btnReset
     #btnCancel
+    #btnPosition
 
     // Elements
     #tBodyPositionHistory
@@ -31,9 +32,16 @@ export default class Track {
     #valueDistance
     #valueLatitude
     #valueLongitude
+    #valuePositionActuelle
 
     // Const
     #PauseText = "Pause"
+
+    #options = {
+        enableHighAccuracy: false,
+        timeout: 5000,
+        maximumAge: 0,
+    };
 
     constructor(title) {
         if (title == "") {
@@ -97,6 +105,7 @@ export default class Track {
                 <button id="btnEnd" class="btn btn-danger">Terminer</button>
                 <button id="btnPause" class="btn btn-info" hidden>Pause</button>
                 <button id="btnStart" class="btn btn-success">Start</button>
+                <button id="btnPosition" class="btn btn-primary">Position actuelle</button>
                 <!-- Button trigger modal -->
             </div>
         </div>
@@ -113,6 +122,18 @@ export default class Track {
                         </div>
                         <div class="card-body">
                             <h5 id="valueDistance" class="card-title">En attente ...</h5>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Position actuelle -->
+                <section id="positionActuelle" class="container">
+                    <div class="card">
+                        <div class="card-header">
+                            Position actuelle
+                        </div>
+                        <div class="card-body">
+                            <h5 id="valuePositionActuelle" class="card-title">En attente ...</h5>
                         </div>
                     </div>
                 </section>
@@ -159,6 +180,7 @@ export default class Track {
         this.#btnEnd = element.querySelector("#btnEnd")
         this.#btnReset = element.querySelector("#btnReset")
         this.#btnCancel = element.querySelector("#btnCancel")
+        this.#btnPosition = element.querySelector("#btnPosition")
 
         // Elements
         this.#tBodyPositionHistory = element.querySelector("#positionHistory").querySelector("tbody")
@@ -167,10 +189,22 @@ export default class Track {
         this.#valueDistance = element.querySelector("#valueDistance")
         this.#valueLatitude = element.querySelector("#valueLatitude")
         this.#valueLongitude = element.querySelector("#valueLongitude")
+        this.#valuePositionActuelle = element.querySelector("#valuePositionActuelle")
 
         // -------------------
         //  Event listeners
         // -------------------
+
+        // Position actuelle
+        this.#btnPosition.addEventListener('click', () => {
+
+            // Call geolocation API
+            navigator.geolocation.getCurrentPosition(position => {
+                const { latitude, longitude } = position.coords
+
+                this.#valuePositionActuelle.innerHTML = latitude +", "+ longitude
+            }, this.error, this.#options);
+        })
 
         // Start voyage
         this.#btnStart.addEventListener('click', () => {
@@ -184,10 +218,12 @@ export default class Track {
             this.#watchId = navigator.geolocation.watchPosition(position => {
                 const { latitude, longitude } = position.coords
 
+                console.log(position);
+
                 this.appendPosition(position);
 
                 this.addHistoryEntry(latitude, longitude)
-            });
+            }, this.error, this.#options);
         })
 
         // Pause voyage
@@ -242,6 +278,11 @@ export default class Track {
 
 
         })
+    }
+
+    // Error function watchPosition
+    error(err) {
+        console.error(`ERROR(${err.code}): ${err.message}`);
     }
 
     resetButtons() {
@@ -322,7 +363,7 @@ export default class Track {
         let newCellLongitude = newRow.insertCell()
 
         let newDate = new Date()
-        let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + " - " + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s" + newDate.getMilliseconds() + "ms"
+        let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + " - " + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s"
         let newTextTimestamp = createElement('span', {
             class: 'badge bg-secondary',
         })

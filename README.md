@@ -16,12 +16,13 @@ Web app to POC GPS tracking from browser on a smartphone.
 - [ ] Calculer frais kilométriques
 - [ ] Distance en mètres tant qu'il y a moins d'1kg de parcouru
 - [ ] Modals Bootstrap pour annuler, reset, terminer
+- [ ] PWA
 
 ### v0.1.4 (current)
 - [x] Systeme de "voyages"
 - [x] Refacto POO JS- 
 - [x] Track : btn "annuler" en plus de "terminer
-- [x] Redesign avec Bootstrap- [ ] 
+- [x] Redesign avec Bootstrap
 
 ### v0.1.3
 - [x] Responsive smartphone

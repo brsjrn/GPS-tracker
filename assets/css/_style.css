@@ -62,8 +62,13 @@
     text-align: center;
 }
 
+#distanceTotale {
+    width: 30%;
+}
+
 #positionHistory {
-    margin-top: 20px;
+    margin-top: 0px;
+    width: 70%;
 }
 
 section {
@@ -82,5 +87,14 @@ section {
 
     section:first-child {
         margin-top: 0;
+    }
+
+    #distanceTotale {
+        width: 50%;
+    }
+
+    #positionHistory {
+        margin-top: 20px;
+        width: 50%;
     }
 }
