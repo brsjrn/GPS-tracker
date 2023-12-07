@@ -429,7 +429,7 @@ export default class Track {
         newTextTimestamp.innerHTML = displayDate;
         newCellTimestamp.appendChild(newTextTimestamp)
 
-        let newTextDistance = document.createTextNode(this.aroundDistance('dm', lastDistance)) + "km")
+        let newTextDistance = document.createTextNode(this.aroundDistance('dm', lastDistance) + "km")
         newCellDistance.appendChild(newTextDistance)
 
         let newTextPosition = document.createTextNode(latitude + ", " + longitude)
