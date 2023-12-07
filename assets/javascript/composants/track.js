@@ -39,10 +39,12 @@ export default class Track {
     #PauseText = "Pause"
     #attenteText = "En attente ..."
     #distancePrecision = 0.5
+    #durationCalibrage = 10 // 10 sec
 
     // Varialbes
     #lastLatitude
     #lastLongitude
+    #isCalibrate = false
 
     constructor(title) {
         if (title == "") {
@@ -102,6 +104,7 @@ export default class Track {
     clearTrack() {
         navigator.geolocation.clearWatch(this.#watchId)
         this.#status = 0
+        this.#isCalibrate = false
     }
 
     end() {
@@ -129,7 +132,7 @@ export default class Track {
                 <button id="btnEnd" class="btn btn-danger">Terminer</button>
                 <button id="btnPause" class="btn btn-info" hidden>Pause</button>
                 <button id="btnStart" class="btn btn-success">Start</button>
-                <button id="btnPosition" class="btn btn-primary">Position actuelle</button>
+                <!-- <button id="btnPosition" class="btn btn-primary">Position actuelle</button> -->
                 <!-- Button trigger modal -->
             </div>
         </div>
@@ -221,19 +224,19 @@ export default class Track {
         // -------------------
 
         // Position actuelle
-        this.#btnPosition.addEventListener('click', () => {
+        // this.#btnPosition.addEventListener('click', () => {
 
-            // Call geolocation API
-            navigator.geolocation.getCurrentPosition(position => {
-                const { latitude, longitude } = position.coords
+        //     // Call geolocation API
+        //     navigator.geolocation.getCurrentPosition(position => {
+        //         const { latitude, longitude } = position.coords
 
-                this.#valuePositionActuelle.innerHTML = latitude + ", " + longitude
-            }, this.errorCurrent, {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 0,
-            });
-        })
+        //         this.#valuePositionActuelle.innerHTML = latitude + ", " + longitude
+        //     }, this.errorCurrent, {
+        //         enableHighAccuracy: true,
+        //         timeout: 5000,
+        //         maximumAge: 0,
+        //     });
+        // })
 
         // Start voyage
         this.#btnStart.addEventListener('click', () => {
@@ -243,26 +246,25 @@ export default class Track {
             // Display stop button
             this.#btnPause.hidden = false
 
+            // Démarre le time de calibrage
+            this.startTimer()
+
             // Call geolocation API
             this.#watchId = navigator.geolocation.watchPosition(position => {
-                console.log("Watch position")
                 const { latitude, longitude } = position.coords
 
-                if ((this.#lastLatitude != latitude) || (this.#lastLongitude != longitude) || (this.#status == 0)) {
-                    this.#lastLatitude = latitude
-                    this.#lastLongitude = longitude
+                if (this.#isCalibrate) {
+                    if ((this.#lastLatitude != latitude) || (this.#lastLongitude != longitude) || (this.#status == 0)) {
+                        this.#lastLatitude = latitude
+                        this.#lastLongitude = longitude
 
-                    // Change status
-                    this.#status = 1
+                        // Change status
+                        this.#status = 1
 
-                    let lastDistance = this.appendPosition(position);
+                        let lastDistance = this.appendPosition(position);
 
-                    this.addHistoryEntry(latitude, longitude, lastDistance)
-
-                    // Add position on map
-                    this.#map.addMarker(position)
-
-                    console.log("Différence détectée !")
+                        this.addHistoryEntry(latitude, longitude, lastDistance)
+                    }
                 }
             }, this.errorWatch, {
                 enableHighAccuracy: true,
@@ -380,15 +382,18 @@ export default class Track {
         }
 
         // On tient compte de la nouvelle distance parcouru si celle-ci est supérieur à la précision en mètre
-        if(this.convertKmToM(this.aroundDistance('dm', lastDistance)) > this.#distancePrecision) {
+        if (this.convertKmToM(this.aroundDistance('dm', lastDistance)) > this.#distancePrecision) {
             this.#distance += lastDistance
-            // Add new coordinates to array
+            
+            // Add position on map
+            this.#map.addMarker(position)
 
+            // Update totale distance
             this.updateDistance();
         }
 
         this.#positions.push(position)
-        
+
         return lastDistance
 
         // Call custom callback
@@ -430,7 +435,7 @@ export default class Track {
         newTextTimestamp.innerHTML = displayDate;
         newCellTimestamp.appendChild(newTextTimestamp)
 
-        let newTextDistance = document.createTextNode(this.aroundDistance('dm', lastDistance) + "km")
+        let newTextDistance = document.createTextNode(this.convertKmToM(this.aroundDistance('dm', lastDistance)) + "km")
         newCellDistance.appendChild(newTextDistance)
 
         let newTextPosition = document.createTextNode(latitude + ", " + longitude)
@@ -455,16 +460,22 @@ export default class Track {
         return value * 1000
     }
 
-    // aroundToDecimeter(value) {
-    //     return (Math.round(value * 10000) / 10000) * 1000
-    // }
+    startTimer() {
+        let timerLeft = this.#durationCalibrage
 
-    // aroundToMeter(value) {
-    //     return (Math.round(value * 1000) / 1000) * 1000
-    // }
+        this.#valueDistance.innerHTML = "Calibrage GPS en cours ..."
+        
+        let waitingTimer = setInterval(() => {
+            timerLeft -= 1;
+            if (timerLeft <= 0) {
+                clearInterval(waitingTimer);
+                this.#isCalibrate = true
 
-    // aroundToKilometer(value) {
-    //     return Math.round(value * 1000) / 1000
-    // }
+                console.log("GPS calibré !")
+            } else {
+                console.log("Calibrage GPS en cours ...")
+            }
+        }, 1000);
+    }
 
 }

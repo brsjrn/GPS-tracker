@@ -13,7 +13,7 @@ Web app to POC GPS tracking from browser on a smartphone.
 ## Versions
 
 ### Backlog
-- [ ] Carte (https://leafletjs.com/)
+- [ ] Attendre X secondes après le start le temps de calibrage du GPS
 - [ ] Utilisation des Signaux javascript pour update de l'interface
 - [ ] Calculer vitesse moyenne
 - [ ] Calculer frais kilométriques
@@ -21,10 +21,13 @@ Web app to POC GPS tracking from browser on a smartphone.
 - [ ] Modals Bootstrap pour annuler, reset, terminer
 - [ ] PWA (local storage, icone bureau, ...)
 - [ ] Récupérer le Timestamp depuis l'objet Geolocation.position
-- [ ] !!! Filtrer les positions statiques : si 2 positions simultannées sont trop proches, on n'enregistre pas la 2nd (et on retest la suite par rapport à la 1ere)
 - [ ] Alert quand le GPS n'est pas actif
 - [ ] Option afficher / cacher map
   - [ ] Tester ressources utilisés avec et sans map
+
+### v0.1.5
+- [x] Carte (https://leafletjs.com/)
+- [x] !!! Filtrer les positions statiques : si 2 positions simultannées sont trop proches, on n'enregistre pas la 2nd (et on retest la suite par rapport à la 1ere)
 
 ### v0.1.4 (current)
 - [x] Systeme de "voyages"
