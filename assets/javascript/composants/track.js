@@ -38,6 +38,7 @@ export default class Track {
     // Const
     #PauseText = "Pause"
     #attenteText = "En attente ..."
+    #distancePrecision = 0.5
 
     // Varialbes
     #lastLatitude
@@ -357,13 +358,12 @@ export default class Track {
     updateDistance() {
         let unit = "km"
 
-        // Conversion en decimetre et arrondi
-        let distanceToDisplay = this.aroundToKilometer(this.#distance)
+        let distanceToDisplay = this.#distance
 
         // Si < 1km alors on affiche en mètres
-        if(distanceToDisplay < 1) {
+        if (distanceToDisplay < 1) {
             unit = "m"
-            distanceToDisplay = this.aroundToMeter(this.#distance)
+            distanceToDisplay = this.convertKmToM(this.aroundDistance('m', this.#distance))
         }
 
         // distanceTotaleValue.innerHTML = (Math.round((distanceToDisplay + Number.EPSILON) * 100) / 100) + unit;
@@ -377,13 +377,16 @@ export default class Track {
 
         if (lastPos) {
             lastDistance = this.calculateDistance(lastPos.coords, position.coords)
-            this.#distance += lastDistance
         }
 
-        // Add new coordinates to array
-        this.#positions.push(position)
+        // On tient compte de la nouvelle distance parcouru si celle-ci est supérieur à la précision en mètre
+        if(this.convertKmToM(this.aroundDistance('dm', lastDistance)) > this.#distancePrecision) {
+            this.#distance += lastDistance
+            // Add new coordinates to array
+            this.#positions.push(position)
 
-        this.updateDistance();
+            this.updateDistance();
+        }
 
         return lastDistance
 
@@ -426,23 +429,41 @@ export default class Track {
         newTextTimestamp.innerHTML = displayDate;
         newCellTimestamp.appendChild(newTextTimestamp)
 
-        let newTextDistance = document.createTextNode(this.aroundToDecimeter(lastDistance) +"m")
+        let newTextDistance = document.createTextNode(this.convertKmToM(this.aroundDistance('dm', lastDistance)) + "m")
         newCellDistance.appendChild(newTextDistance)
 
         let newTextPosition = document.createTextNode(latitude + ", " + longitude)
         newCellPosition.appendChild(newTextPosition)
     }
 
-    aroundToDecimeter(value) {
-        return (Math.round(value * 10000) / 10000) * 1000
+    aroundDistance(precision, value) {
+        switch (precision) {
+            case 'm':
+                // retourne en mètre
+                return (Math.round(value * 1000) / 1000) * 1000
+                break
+            case 'dm':
+                return (Math.round(value * 10000) / 10000) * 1000
+                break
+            default:
+                console.log(`${precision} n'est pas une précision prise en compte.`);
+        }
     }
 
-    aroundToMeter(value) {
-        return (Math.round(value * 1000) / 1000) * 1000
+    convertKmToM(value) {
+        return value * 1000
     }
 
-    aroundToKilometer(value) {
-        return Math.round(value * 1000) / 1000
-    }
+    // aroundToDecimeter(value) {
+    //     return (Math.round(value * 10000) / 10000) * 1000
+    // }
+
+    // aroundToMeter(value) {
+    //     return (Math.round(value * 1000) / 1000) * 1000
+    // }
+
+    // aroundToKilometer(value) {
+    //     return Math.round(value * 1000) / 1000
+    // }
 
 }
