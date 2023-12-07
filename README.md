@@ -4,6 +4,9 @@ Web app to POC GPS tracking from browser on a smartphone.
 
 <a href="https://brsjrn-gps-tracking.netlify.app/" target="_blank">Demo</a>
 
+# Libraries
+- Leaflet.js : https://leafletjs.com/
+
 # Ressources
 - How to calculate distance between GPS positions : http://www.movable-type.co.uk/scripts/latlong.html
 
@@ -16,8 +19,12 @@ Web app to POC GPS tracking from browser on a smartphone.
 - [ ] Calculer frais kilométriques
 - [ ] Distance en mètres tant qu'il y a moins d'1kg de parcouru
 - [ ] Modals Bootstrap pour annuler, reset, terminer
-- [ ] PWA
+- [ ] PWA (local storage, icone bureau, ...)
 - [ ] Récupérer le Timestamp depuis l'objet Geolocation.position
+- [ ] !!! Filtrer les positions statiques : si 2 positions simultannées sont trop proches, on n'enregistre pas la 2nd (et on retest la suite par rapport à la 1ere)
+- [ ] Alert quand le GPS n'est pas actif
+- [ ] Option afficher / cacher map
+  - [ ] Tester ressources utilisés avec et sans map
 
 ### v0.1.4 (current)
 - [x] Systeme de "voyages"

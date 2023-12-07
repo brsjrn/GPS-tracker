@@ -68,9 +68,6 @@ export default class Track {
 
             this.#map = new Map('mapTrack', position, 19)
             this.#map.displayMap()
-            // this.#map.addMarker(position)
-
-            watchGPS()
         }, () => { }, {
             enableHighAccuracy: true,
             timeout: 5000,
@@ -178,6 +175,7 @@ export default class Track {
                                 <thead>
                                     <tr>
                                         <th>Timestamp</th>
+                                        <th>Distance</th>
                                         <th>Position</th>
                                     </tr>
                                 </thead>
@@ -256,9 +254,9 @@ export default class Track {
                     // Change status
                     this.#status = 1
 
-                    this.appendPosition(position);
+                    let lastDistance = this.appendPosition(position);
 
-                    this.addHistoryEntry(latitude, longitude)
+                    this.addHistoryEntry(latitude, longitude, lastDistance)
 
                     // Add position on map
                     this.#map.addMarker(position)
@@ -373,14 +371,19 @@ export default class Track {
     appendPosition(position) {
         // Calculate distance from last position if available
         let lastPos = this.#positions[this.#positions.length - 1]
+        let lastDistance = 0
+
         if (lastPos) {
-            this.#distance += this.calculateDistance(lastPos.coords, position.coords)
+            lastDistance = this.calculateDistance(lastPos.coords, position.coords)
+            this.#distance += lastDistance
         }
 
         // Add new coordinates to array
         this.#positions.push(position)
 
         this.updateDistance();
+
+        return lastDistance
 
         // Call custom callback
         // if(watchCallback) {
@@ -404,23 +407,28 @@ export default class Track {
         return radius * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)))
     }
 
-    addHistoryEntry(latitude, longitude) {
+    addHistoryEntry(latitude, longitude, lastDistance) {
 
         let newRow = this.#tBodyPositionHistory.insertRow(0);
 
         let newCellTimestamp = newRow.insertCell()
-        let newCellLPosition = newRow.insertCell()
+        let newCellDistance = newRow.insertCell()
+        let newCellPosition = newRow.insertCell()
 
         let newDate = new Date()
         let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + " - " + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s"
         let newTextTimestamp = createElement('span', {
             class: 'badge bg-secondary',
         })
+
         newTextTimestamp.innerHTML = displayDate;
         newCellTimestamp.appendChild(newTextTimestamp)
 
+        let newTextDistance = document.createTextNode(lastDistance)
+        newCellDistance.appendChild(newTextDistance)
+
         let newTextPosition = document.createTextNode(latitude + ", " + longitude)
-        newCellLPosition.appendChild(newTextPosition)
+        newCellPosition.appendChild(newTextPosition)
     }
 
 }
