@@ -430,7 +430,7 @@ export default class Track {
         let newCellPosition = newRow.insertCell()
 
         let newDate = new Date()
-        let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + " - " + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s"
+        let displayDate = newDate.getDate() + "/" + newDate.getMonth() + "/" + newDate.getFullYear() + "<br />" + newDate.getHours() + "h" + newDate.getMinutes() + "m" + newDate.getSeconds() + "s"
         let newTextTimestamp = createElement('span', {
             class: 'badge bg-secondary',
         })
