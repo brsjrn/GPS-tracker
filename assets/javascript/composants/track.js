@@ -263,9 +263,7 @@ export default class Track {
                         // Change status
                         this.#status = 1
 
-                        let lastDistance = this.appendPosition(position);
-
-                        this.addHistoryEntry(latitude, longitude, lastDistance)
+                        this.appendPosition(position);
                     }
                 }
             }, this.errorWatch, {
@@ -392,6 +390,9 @@ export default class Track {
 
             // Update totale distance
             this.updateDistance();
+
+            // Ajoute à l'historique du voyage
+            this.addHistoryEntry(position.coords.latitude, position.coords.longitude, lastDistance)
         }
 
         this.#positions.push(position)

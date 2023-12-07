@@ -61,5 +61,5 @@ export function addHistoryTrack(track) {
     newCellDate.appendChild(newDateBadge)
 
     newCellTitle.appendChild(document.createTextNode(track.getTitle()))
-    newCellStatus.appendChild(document.createTextNode(convertKmToM(aroundDistance('m', track.getDistance()))))
+    newCellStatus.appendChild(document.createTextNode(aroundDistance('m', track.getDistance()) +" km"))
 }
