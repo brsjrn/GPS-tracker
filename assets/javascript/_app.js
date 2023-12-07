@@ -1,6 +1,6 @@
 import { createElement, createModal } from "./fonctions/dom.js";
 import Track from "./composants/track.js";
-import Map from "./composants/map.js";
+import { aroundDistance, convertKmToM } from "./fonctions/utils.js";
 
 // -----------
 // Geolocation
@@ -10,32 +10,6 @@ import Map from "./composants/map.js";
 
 // Globals
 export let listTracks = []
-
-// var newMap
-// navigator.geolocation.getCurrentPosition(position => {
-//     const { latitude, longitude } = position.coords
-
-//     newMap = new Map('mapTest', position, 19)
-//     newMap.displayMap()
-//     newMap.addMarker(position)
-
-//     watchGPS()
-// }, () => {}, {
-//     enableHighAccuracy: true,
-//     timeout: 5000,
-//     maximumAge: 0,
-// });
-
-// function watchGPS() {
-//     navigator.geolocation.watchPosition(position => {
-//         console.log("Watch position")
-//         newMap.addMarker(position)
-//     }, () => {}, {
-//         enableHighAccuracy: true,
-//         timeout: 5000,
-//         maximumAge: 0,
-//     });
-// }
 
 /**
  * @type Track
@@ -87,5 +61,5 @@ export function addHistoryTrack(track) {
     newCellDate.appendChild(newDateBadge)
 
     newCellTitle.appendChild(document.createTextNode(track.getTitle()))
-    newCellStatus.appendChild(document.createTextNode(track.getDistance()))
+    newCellStatus.appendChild(document.createTextNode(convertKmToM(track.getDistance())))
 }
