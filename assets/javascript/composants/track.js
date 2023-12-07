@@ -377,7 +377,6 @@ export default class Track {
 
         if (lastPos) {
             lastDistance = this.calculateDistance(lastPos.coords, position.coords)
-            this.#positions.push(position)
         }
 
         // On tient compte de la nouvelle distance parcouru si celle-ci est supérieur à la précision en mètre
@@ -388,6 +387,8 @@ export default class Track {
             this.updateDistance();
         }
 
+        this.#positions.push(position)
+        
         return lastDistance
 
         // Call custom callback
@@ -440,10 +441,10 @@ export default class Track {
         switch (precision) {
             case 'm':
                 // retourne en mètre
-                return (Math.round(value * 1000) / 1000) * 1000
+                return Math.round(value * 1000) / 1000
                 break
             case 'dm':
-                return (Math.round(value * 10000) / 10000) * 1000
+                return Math.round(value * 10000) / 10000
                 break
             default:
                 console.log(`${precision} n'est pas une précision prise en compte.`);
