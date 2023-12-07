@@ -41,7 +41,7 @@ export default class Track {
     #PauseText = "Pause"
     #attenteText = "En attente ..."
     #distancePrecision = 0.5
-    #durationCalibrage = 10 // 10 sec
+    #durationCalibrage = 5 // 10 sec
 
     // Varialbes
     #lastLatitude
