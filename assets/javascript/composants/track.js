@@ -355,14 +355,16 @@ export default class Track {
     }
 
     updateDistance() {
-
-        let distanceToDisplay = this.#distance
         let unit = "km"
 
-        // if(distance < 1) {
-        //     distanceToDisplay = convertKmToM(distance);
-        //     unit = "m";
-        // }
+        // Conversion en decimetre et arrondi
+        let distanceToDisplay = this.aroundToKilometer(this.#distance)
+
+        // Si < 1km alors on affiche en mètres
+        if(distanceToDisplay < 1) {
+            unit = "m"
+            distanceToDisplay = this.aroundToMeter(this.#distance)
+        }
 
         // distanceTotaleValue.innerHTML = (Math.round((distanceToDisplay + Number.EPSILON) * 100) / 100) + unit;
         this.#valueDistance.innerHTML = distanceToDisplay + unit
@@ -424,11 +426,23 @@ export default class Track {
         newTextTimestamp.innerHTML = displayDate;
         newCellTimestamp.appendChild(newTextTimestamp)
 
-        let newTextDistance = document.createTextNode(lastDistance)
+        let newTextDistance = document.createTextNode(this.aroundToDecimeter(lastDistance) +"m")
         newCellDistance.appendChild(newTextDistance)
 
         let newTextPosition = document.createTextNode(latitude + ", " + longitude)
         newCellPosition.appendChild(newTextPosition)
+    }
+
+    aroundToDecimeter(value) {
+        return (Math.round(value * 10000) / 10000) * 1000
+    }
+
+    aroundToMeter(value) {
+        return (Math.round(value * 1000) / 1000) * 1000
+    }
+
+    aroundToKilometer(value) {
+        return Math.round(value * 1000) / 1000
     }
 
 }
