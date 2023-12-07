@@ -377,13 +377,13 @@ export default class Track {
 
         if (lastPos) {
             lastDistance = this.calculateDistance(lastPos.coords, position.coords)
+            this.#positions.push(position)
         }
 
         // On tient compte de la nouvelle distance parcouru si celle-ci est supérieur à la précision en mètre
         if(this.convertKmToM(this.aroundDistance('dm', lastDistance)) > this.#distancePrecision) {
             this.#distance += lastDistance
             // Add new coordinates to array
-            this.#positions.push(position)
 
             this.updateDistance();
         }
