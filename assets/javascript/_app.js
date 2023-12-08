@@ -9,7 +9,8 @@ import { aroundDistance, convertKmToM } from "./fonctions/utils.js";
 // --- Variables
 
 // Globals
-export let listTracks = []
+let listTracks = []
+export const fraisKilometriques = 0.25
 
 /**
  * @type Track
@@ -50,16 +51,18 @@ export function addHistoryTrack(track) {
     // Ajoute une ligne au tableau d'historique
     const newHistoryRow = document.querySelector("#history").querySelector("tbody").insertRow(0);
 
-    const newCellDate = newHistoryRow.insertCell();
+    // const newCellDate = newHistoryRow.insertCell();
     const newCellTitle = newHistoryRow.insertCell();
-    const newCellStatus = newHistoryRow.insertCell();
+    const newCellDistance = newHistoryRow.insertCell();
+    const newCellPrice = newHistoryRow.insertCell();
 
     let newDateBadge = createElement('span', {
         class: 'badge bg-secondary',
     })
     newDateBadge.innerHTML = track.getDate();
-    newCellDate.appendChild(newDateBadge)
+    // newCellDate.appendChild(newDateBadge)
 
     newCellTitle.appendChild(document.createTextNode(track.getTitle()))
-    newCellStatus.appendChild(document.createTextNode(aroundDistance('m', track.getDistance()) +" km"))
+    newCellDistance.appendChild(document.createTextNode(aroundDistance('m', track.getDistance()) +" km"))
+    newCellPrice.appendChild(document.createTextNode(track.getPrice() +"€"))
 }

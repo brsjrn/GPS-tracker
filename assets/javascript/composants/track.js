@@ -1,6 +1,7 @@
 import { createElement, createModal } from "../fonctions/dom.js"
 import { addHistoryTrack } from "../_app.js"
 import { aroundDistance, convertKmToM } from "../fonctions/utils.js"
+import { fraisKilometriques } from "../_app.js"
 
 import Map from "./map.js"
 
@@ -101,6 +102,10 @@ export default class Track {
 
     getDate() {
         return this.#date
+    }
+
+    getPrice() {
+        return this.#distance * fraisKilometriques
     }
 
     clearTrack() {
