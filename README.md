@@ -16,7 +16,6 @@ Web app to POC GPS tracking from browser on a smartphone.
 - [ ] Utilisation des Signaux javascript pour update de l'interface
 - [ ] Calculer vitesse moyenne
 - [ ] Calculer frais kilométriques
-- [ ] Distance en mètres tant qu'il y a moins d'1kg de parcouru
 - [ ] Modals Bootstrap pour annuler, reset, terminer
 - [ ] PWA (local storage, icone bureau, ...)
 - [ ] Récupérer le Timestamp depuis l'objet Geolocation.position
